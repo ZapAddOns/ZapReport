@@ -48,7 +48,7 @@ namespace ZapReport
             }
             catch (FileNotFoundException _)
             {
-                while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapReport.cfg"), Translate.GetString("FileNotFoundTextCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
+                while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapReport.cfg"), Translate.GetString("FileNotFoundErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
                     ;
 
                 Application.Current.Shutdown();
