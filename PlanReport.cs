@@ -1,5 +1,4 @@
-﻿using QuestPDF.Drawing;
-using QuestPDF.Fluent;
+﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -89,11 +88,11 @@ namespace ZapReport
 
         public DocumentSettings GetSettings()
         {
-            var settings = DocumentSettings.Default;
+            var result = DocumentSettings.Default;
 
-            settings.PdfA = true;
+            result.PdfA = true;
 
-            return settings;
+            return result;
         }
     }
 }
