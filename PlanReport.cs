@@ -78,7 +78,6 @@ namespace ZapReport
         {
             var result = DocumentMetadata.Default;
 
-            result.PdfA = true;
             result.Author = _printData.Physicist?.Name ?? "";
             result.Subject = Translate.GetString("PDFSubjectPlan");
             result.Title = String.Format(Translate.GetString("PDFTitle"), _printData.Patient.MedicalId.Trim(), _printData.Patient.PatientName());
@@ -86,6 +85,15 @@ namespace ZapReport
             result.Producer = Translate.GetString("PDFProducer");
 
             return result;
+        }
+
+        public DocumentSettings GetSettings()
+        {
+            var settings = DocumentSettings.Default;
+
+            settings.PdfA = true;
+
+            return settings;
         }
     }
 }
