@@ -42,7 +42,19 @@ namespace ZapReport
 
         private void Init(object sender, RoutedEventArgs e)
         {
-            CreateConfig();
+            try
+            {
+                CreateConfig();
+            }
+            catch (FileNotFoundException _)
+            {
+                while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapReport.cfg"), Translate.GetString("FileNotFoundTextCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
+                    ;
+
+                Application.Current.Shutdown();
+                return;
+            }
+
             CreateLogger();
 
             _client = new ZapClient.ZapClient(GetUsernameAndPassword, _logger);
