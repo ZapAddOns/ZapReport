@@ -59,9 +59,28 @@ namespace ZapReport
 
             _client = new ZapClient.ZapClient(GetUsernameAndPassword, _logger);
 
-            if (!_client.OpenConnection())
+
+            var isOpen = false;
+
+            try
             {
-                Close();
+                _client.OpenConnection();
+            }
+            catch 
+            {
+                while (MessageBox.Show(String.Format(Translate.GetString("ClientOpenErrorText"), _client.Config.Server, _client.Config.Port, _client.Config.Username), Translate.GetString("ClientOpenErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
+                    ;
+
+                Application.Current.Shutdown();
+                return;
+            }
+
+            if (!isOpen)
+            {
+                while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapClient.cfg"), Translate.GetString("FileNotFoundErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
+                    ;
+
+                Application.Current.Shutdown();
                 return;
             }
 
