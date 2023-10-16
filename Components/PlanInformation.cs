@@ -69,6 +69,12 @@ namespace ZapReport.Components
                     table.Cell().Text(Translate.GetString("PrimarySeries")).Style(Style.Bold);
                     var primarySeries = $"{_printData.PrimarySeries.Modality}, {_printData.PrimarySeries.SeriesDescription.Trim().FromUnicode()}, {_printData.PrimarySeries.ScanDateTime.ToString("d")}, {_printData.PrimarySeries.NumOfInstances.ToString("0")} " + Translate.GetString("Images");
                     table.Cell().Text(primarySeries);
+                    
+                    if (_printData.PlanSystemData?.DensityModel?.DensityModelName != null) 
+                    {
+                        table.Cell().Text(Translate.GetString("DensityModel")).Style(Style.Bold);
+                        table.Cell().Text(_printData.PlanSystemData?.DensityModel?.DensityModelName);
+                    }
                 }
                 table.Cell().Text(Translate.GetString("DVSpacing")).Style(Style.Bold);
                 table.Cell().Text(_printData.PlanData.DoseVolumePixelSpacing.ToString("#,#0.0 mm"));
