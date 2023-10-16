@@ -42,6 +42,8 @@ namespace ZapReport
 
         private void Init(object sender, RoutedEventArgs e)
         {
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
             try
             {
                 CreateConfig();
