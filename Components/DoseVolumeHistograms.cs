@@ -1,6 +1,5 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using ZapReport.Extensions;
