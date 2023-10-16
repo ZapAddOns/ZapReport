@@ -92,7 +92,7 @@ namespace ZapReport.Components
 
             using (var stream = new MemoryStream())
             {
-                bitmap.Save(stream, ImageFormat.Png);
+                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
