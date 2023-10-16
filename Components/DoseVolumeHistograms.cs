@@ -12,6 +12,7 @@ namespace ZapReport.Components
     {
         private PlanConfig _config;
         private PrintData _printData;
+        private byte[] _image;
 
         public static new string ComponentName = "DoseVolumeHistograms";
 
@@ -21,6 +22,7 @@ namespace ZapReport.Components
         {
             _config = config;
             _printData = printData;
+            _image = null;
         }
 
         public override void Compose(IContainer container)
@@ -36,8 +38,13 @@ namespace ZapReport.Components
 
         private byte[] GeneratePlot(Size size)
         {
-            var factor = 72;
-            var plot = new ScottPlot.Plot((int)size.Height * factor, (int)size.Width * factor);
+            if (_image != null)
+            { 
+                return _image; 
+            }
+
+            // Size given in 0.1 mm
+            var plot = new ScottPlot.Plot((int)size.Height, (int)size.Width);
 
             plot.Title(ComponentCaption, true, System.Drawing.Color.Black, 16);
             plot.XAxis.Label(Translate.GetString("Dose") + " [cGy]", System.Drawing.Color.Black, size: 12, fontName: "Arial");
@@ -85,7 +92,7 @@ namespace ZapReport.Components
 
             // plt.AddTooltip(label: "Special Point", x: 17, y: ys[17]);
 
-            var bitmap = plot.Render((int)size.Height, (int)size.Width, false, 10);
+            var bitmap = plot.Render((int)size.Height / 3, (int)size.Width / 3, false, 10);
 
             bitmap.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
 
@@ -95,8 +102,10 @@ namespace ZapReport.Components
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                return stream.ToArray();
+                _image = stream.ToArray();
             }
+
+            return _image;
         }
     }
 }
