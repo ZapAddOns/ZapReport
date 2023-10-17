@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ZapReport" 
         WindowStartupLocation="CenterScreen" 
-        Style="{DynamicResource CustomWindowStyle}"
+        Style="{StaticResource CustomWindowStyle}"
         FontSize="16"
         MinWidth="1024"
         MinHeight="768"

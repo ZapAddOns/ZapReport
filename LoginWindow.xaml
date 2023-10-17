@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Login" 
         WindowStartupLocation="CenterScreen" 
-        Style="{DynamicResource CustomWindowStyle}"
+        Style="{StaticResource CustomWindowStyle}"
         ResizeMode="NoResize"
         FontSize="16">
     <StackPanel Margin="12,12,12,12">
