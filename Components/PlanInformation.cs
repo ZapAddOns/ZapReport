@@ -114,8 +114,16 @@ namespace ZapReport.Components
                     table.Cell().Text((_printData.PlanSummary.PrescribedPercent / 100.0).ToString("#,#0.0 %"));
                     table.Cell().Text(Translate.GetString("MaximumDose")).Style(Style.Bold);
                     table.Cell().Text(_printData.PlanDVData?.DVHOverallMaxDose.ToString("#,#0.0 cGy") ?? " ");
-                    table.Cell().Text(Translate.GetString("TreatmentTime")).Style(Style.Bold);
-                    table.Cell().Text(TimeSpan.FromSeconds(_printData.PlanSummary.TotalTreatmentTime).ToString("hh\\:mm\\:ss"));
+                    if (string.IsNullOrEmpty(_printData.PlanData.FractionTimeEstimate))
+                    {
+                        table.Cell().Text(Translate.GetString("TreatmentTime")).Style(Style.Bold);
+                        table.Cell().Text(TimeSpan.FromSeconds(_printData.PlanSummary.TotalTreatmentTime).ToString("hh\\:mm\\:ss"));
+                    }
+                    else
+                    {
+                        table.Cell().Text(Translate.GetString("TreatmentTime")).Style(Style.Bold);
+                        table.Cell().Text(_printData.PlanData.FractionTimeEstimate);
+                    }
                 }
             });
         }
