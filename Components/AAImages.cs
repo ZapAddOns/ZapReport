@@ -1,10 +1,6 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using SkiaSharp;
-using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using ZapReport.Helpers;
 using ZapTranslation;
 
@@ -32,7 +28,7 @@ namespace ZapReport.Components
                 return;
             }
 
-            var rootPath = "C:\\Temp"; // "C:\\ZapSurgical\\AlignmentImages";
+            var rootPath = "C:\\ZapSurgical\\AutoAlignment";
 
             // Exists dirctory
             if (!Directory.Exists(rootPath))
