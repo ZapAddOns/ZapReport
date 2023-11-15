@@ -1,4 +1,5 @@
-﻿using QuestPDF.Fluent;
+﻿using NLog;
+using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System.IO;
 using ZapReport.Helpers;
@@ -8,6 +9,7 @@ namespace ZapReport.Components
 {
     public class AAImages : PrintComponent
     {
+        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
         private PlanConfig _config;
         private PrintData _printData;
 
@@ -33,6 +35,8 @@ namespace ZapReport.Components
             // Exists dirctory
             if (!Directory.Exists(rootPath))
             {
+                _logger.Warn($"Path {rootPath} couldn't be found");
+
                 return;
             }
 
@@ -60,6 +64,8 @@ namespace ZapReport.Components
 
             if (!imageFound)
             {
+                _logger.Warn($"No AA image found for any fraction");
+
                 return;
             }
 
@@ -72,7 +78,7 @@ namespace ZapReport.Components
 
         private void ComposeAAImagesBody(IContainer container)
         {
-            container.Column(c =>
+            container.Column(col =>
             {
                 foreach (var fraction in _printData.DeliveryData.Fractions)
                 {
@@ -85,8 +91,11 @@ namespace ZapReport.Components
                         var date = File.GetCreationTime(file);
                         var text = string.Format(Translate.GetString("AAImagesCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
 
-                        c.Item().PaddingTop(10).Text(text);
-                        c.Item().PaddingTop(10).Image(file).FitWidth();
+                        col.Item().ShowEntire().Column(c =>
+                        {
+                            c.Item().PaddingTop(10).Text(text);
+                            c.Item().PaddingTop(10).Image(file).FitWidth();
+                        });
                     }
                 }
             });
