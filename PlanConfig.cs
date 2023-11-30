@@ -8,6 +8,8 @@ namespace ZapReport
     public class PlanConfig
     {
         public string Folder;
+        public string LogFolder;
+        public string AAImagesFolder;
         public string Culture;
         public bool LineColorChanging = true;
         public Dictionary<string, byte[]> StructureColors;
