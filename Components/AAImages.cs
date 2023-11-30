@@ -30,7 +30,7 @@ namespace ZapReport.Components
                 return;
             }
 
-            var rootPath = "C:\\ZapSurgical\\AutoAlignment";
+            var rootPath = _config.AAImagesFolder;
 
             // Exists dirctory
             if (!Directory.Exists(rootPath))
@@ -53,7 +53,7 @@ namespace ZapReport.Components
 
                 if (Directory.Exists(path))
                 {
-                    // Directory for fraction exists, so read all images in this directory
+                    // Directory for fraction exists, so save all filenames in this directory
                     var files = Directory.GetFiles(path, "*.png");
 
                     imageFound = imageFound || files.Length > 0;
@@ -69,7 +69,7 @@ namespace ZapReport.Components
                 return;
             }
 
-            container.EnsureSpace(100).Column(column =>
+            container.EnsureSpace(300).Column(column =>
             {
                 column.Item().Text(ComponentCaption).Style(Style.Title);
                 column.Item().Element(ComposeAAImagesBody);
