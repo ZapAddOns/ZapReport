@@ -16,6 +16,11 @@ namespace ZapReport.Helpers
         {
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
+            if (logData == null)
+            { 
+                return new byte[0];
+            }
+
             // Size given in 0.1 mm
             var plot = new ScottPlot.Plot((int)size.Width, (int)size.Height);
 
