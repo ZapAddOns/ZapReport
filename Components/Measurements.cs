@@ -36,7 +36,7 @@ namespace ZapReport.Components
 
             // Get data for AA images
 
-            var rootPath = "C:\\ZapSurgical\\AutoAlignment";
+            var rootPath = _config.AAImagesFolder;
 
             // Exists dirctory
             if (!Directory.Exists(rootPath))
@@ -73,7 +73,7 @@ namespace ZapReport.Components
 
             // Get data for rotations diagram and MV imager diagram
 
-            rootPath = "C:\\Entwicklung\\Logs";
+            rootPath = _config.LogFolder;
 
             var foundLogs = false;
 
