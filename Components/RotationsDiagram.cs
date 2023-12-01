@@ -88,8 +88,11 @@ namespace ZapReport.Components
                     var date = fraction.StartTime;
                     var text = string.Format(Translate.GetString("RotationDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
                     var image = Diagrams.GenerateRotationsPlot(size, fraction, text);
-                    
-                    column.Item().PaddingTop(10).Image(image).FitWidth();
+
+                    if (image != null)
+                    {
+                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                    }
                 }
             });
         }

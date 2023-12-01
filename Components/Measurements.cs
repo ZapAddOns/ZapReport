@@ -146,15 +146,21 @@ namespace ZapReport.Components
                     date = fraction.StartTime;
                     text = string.Format(Translate.GetString("RotationDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
                     var image = Diagrams.GenerateRotationsPlot(size, fraction, text);
-                    
-                    column.Item().PaddingTop(10).Image(image).FitWidth();
+
+                    if (image != null)
+                    {
+                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                    }
 
                     // Print MVImager diagram
 
                     text = string.Format(Translate.GetString("MVImagerDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
                     image = Diagrams.GenerateMVImagerPlot(size, fraction, text);
 
-                    column.Item().PaddingTop(10).Image(image).FitWidth();
+                    if (image != null)
+                    {
+                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                    }
                 }
             });
         }
