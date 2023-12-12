@@ -78,51 +78,54 @@ namespace ZapReport.Components
                 var totalProcessing = 0.0;
                 var total = 0.0;
 
-                foreach (var fraction in _printData.DeliveryData.Fractions.OrderBy(t => t.StartTime))
+                if (_printData?.DeliveryData?.Fractions != null) 
                 {
-                    if (_printData.DeliveredFraction > 0 && fraction.ID != _printData.DeliveredFraction)
+                    foreach (var fraction in _printData.DeliveryData.Fractions.OrderBy(t => t.StartTime))
                     {
-                        continue;
+                        if (_printData.DeliveredFraction > 0 && fraction.ID != _printData.DeliveredFraction)
+                        {
+                            continue;
+                        }
+
+                        foreach (var treatment in fraction.Treatments)
+                        {
+                            // var processingTime = fraction.DeliveryTime > 0.0 ? fraction.DeliveryTime - fraction.SetupTime - fraction.GantryTime - fraction.TableTime - fraction.LinacTime - fraction.ImageTime : 0.0;
+                            var processingTime = treatment.DeliveryTime > 0.0 ? treatment.DeliveryTime - treatment.GantryTime - treatment.TableTime - treatment.LinacTime : 0.0;
+
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.Fraction.ID.ToString("0")}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.SetupTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.GantryTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.TableTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.LinacTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.ImageTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{processingTime.ToHourMinSec()}");
+                            table.Cell().Element(Style.TableContentCenter).Text($"{treatment.DeliveryTime.ToHourMinSec()}");
+
+                            totalSetup += treatment.SetupTime;
+                            totalDelivery += treatment.DeliveryTime;
+                            totalGantry += treatment.GantryTime;
+                            totalTable += treatment.TableTime;
+                            totalLinac += treatment.LinacTime;
+                            totalImage += treatment.ImageTime;
+                            totalProcessing += processingTime;
+                            total += treatment.TotalTime;
+                        }
                     }
 
-                    foreach (var treatment in fraction.Treatments)
+                    //var fractionsInBeamSet = _printData.DeliveryData.Fractions.Where(f => f.ID == _printData.DeliveredFraction).Count();
+                    //var fractionsInTreatmentReport = _printData.TreatmentReportData.Where(f => f.Fraction.ID == _printData.DeliveredFraction).Count();
+
+                    if ((_printData.DeliveredFraction == 0 && _printData.DeliveryData.TotalTreatments > 1)) // || (fractionsInBeamSet != fractionsInTreatmentReport))
                     {
-                        // var processingTime = fraction.DeliveryTime > 0.0 ? fraction.DeliveryTime - fraction.SetupTime - fraction.GantryTime - fraction.TableTime - fraction.LinacTime - fraction.ImageTime : 0.0;
-                        var processingTime = treatment.DeliveryTime > 0.0 ? treatment.DeliveryTime - treatment.GantryTime - treatment.TableTime - treatment.LinacTime : 0.0;
-
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.Fraction.ID.ToString("0")}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.SetupTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.GantryTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.TableTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.LinacTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.ImageTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{processingTime.ToHourMinSec()}");
-                        table.Cell().Element(Style.TableContentCenter).Text($"{treatment.DeliveryTime.ToHourMinSec()}");
-
-                        totalSetup += treatment.SetupTime;
-                        totalDelivery += treatment.DeliveryTime;
-                        totalGantry += treatment.GantryTime;
-                        totalTable += treatment.TableTime;
-                        totalLinac += treatment.LinacTime;
-                        totalImage += treatment.ImageTime;
-                        totalProcessing += processingTime;
-                        total += treatment.TotalTime;
+                        table.Cell().Element(Style.TableContentCenter).Text($"{Translate.GetString("FractionsAll")}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalSetup.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalGantry.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalTable.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalLinac.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalImage.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalProcessing.ToHourMinSec()}");
+                        table.Cell().Element(Style.TableContentCenter).Text($"{totalDelivery.ToHourMinSec()}");
                     }
-                }
-
-                //var fractionsInBeamSet = _printData.DeliveryData.Fractions.Where(f => f.ID == _printData.DeliveredFraction).Count();
-                //var fractionsInTreatmentReport = _printData.TreatmentReportData.Where(f => f.Fraction.ID == _printData.DeliveredFraction).Count();
-
-                if ((_printData.DeliveredFraction == 0 && _printData.DeliveryData.TotalTreatments > 1)) // || (fractionsInBeamSet != fractionsInTreatmentReport))
-                {
-                    table.Cell().Element(Style.TableContentCenter).Text($"{Translate.GetString("FractionsAll")}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalSetup.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalGantry.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalTable.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalLinac.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalImage.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalProcessing.ToHourMinSec()}");
-                    table.Cell().Element(Style.TableContentCenter).Text($"{totalDelivery.ToHourMinSec()}");
                 }
             });
         }
