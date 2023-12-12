@@ -1,4 +1,5 @@
-﻿using QuestPDF.Infrastructure;
+﻿using NLog;
+using QuestPDF.Infrastructure;
 using ScottPlot;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace ZapReport.Helpers
 {
     internal class Diagrams
     {
+        readonly static Logger _logger = LogManager.GetCurrentClassLogger();
+
         public static byte[] GenerateRotationsPlot(Size size, Fraction fraction, string caption)
         {
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
@@ -20,6 +23,8 @@ namespace ZapReport.Helpers
             { 
                 return null;
             }
+
+            _logger.Log(LogLevel.Info, $"Found {logData.Isocenters.Count} isocenters");
 
             // Size given in 0.1 mm
             var plot = new ScottPlot.Plot((int)size.Width, (int)size.Height);
@@ -208,6 +213,12 @@ namespace ZapReport.Helpers
             var minY = Math.Min(valuesYs.Min(), cumYs.Min());
             var lowerLimitY = Math.Floor(minY);
 
+            // If there is no data
+            if (upperLimitY <= lowerLimitY) 
+            {
+                return null;
+            }
+            
             var legendLocation = Math.Abs(upperLimitY - maxY) > Math.Abs(lowerLimitY - minY) ? Alignment.UpperRight : Alignment.LowerRight;
 
             plot.SetAxisLimitsX(0, length + 1);
