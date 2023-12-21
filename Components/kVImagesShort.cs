@@ -61,17 +61,19 @@ namespace ZapReport.Components
 
                 // AA images don't belong to a node
                 totalAAImages += fraction.KVImages.Where(i => i.Node == null).Count();
+                totalInTreatmentImages += fraction.KVImages.Where(i => i.Node != null).Count();
+                totalDoseInMicroGy = fraction.KVImages.Sum(i => i.KVDoseMicroGy);
 
                 foreach (var treatment in fraction.Treatments)
                 {
                     foreach (var path in treatment.Paths)
                     {
                         var treatmentImages = fraction.KVImages.Where(i => i.PathUUID.Equals(path.PathUUID, StringComparison.OrdinalIgnoreCase) && i.Node != null);
-                        totalInTreatmentImages += treatmentImages.Count();
-                        totalDoseInMicroGy += CalcDoseForkVImages(treatmentImages);
-                        var alignmentImages = fraction.KVImages.Where(i => i.PathUUID.Equals(path.PathUUID, StringComparison.OrdinalIgnoreCase) && i.Node == null);
-                        totalAlignmentImages += alignmentImages.Count();
-                        totalDoseInMicroGy += CalcDoseForkVImages(alignmentImages);
+                        //totalInTreatmentImages += treatmentImages.Count();
+                        //totalDoseInMicroGy += CalcDoseForkVImages(treatmentImages);
+                        //var alignmentImages = fraction.KVImages.Where(i => i.PathUUID.Equals(path.PathUUID, StringComparison.OrdinalIgnoreCase) && i.Node == null);
+                        //totalAlignmentImages += alignmentImages.Count();
+                        //totalDoseInMicroGy += CalcDoseForkVImages(alignmentImages);
 
                         foreach (var image in treatmentImages)
                         {
@@ -90,9 +92,9 @@ namespace ZapReport.Components
                 }
             }
 
-            int totalImages = totalInTreatmentImages + totalAlignmentImages;
-            int totalTAImages = totalAlignmentImages - totalAAImages;
-            totalTAImages = totalTAImages > 0 ? totalTAImages : 0;
+            int totalImages = totalInTreatmentImages + totalAAImages;
+            //int totalTAImages = 2 * totalAlignmentImages - totalAAImages;
+            //totalTAImages = totalTAImages > 0 ? totalTAImages : 0;
 
             var keyForMostCommonParameter = parameters.FirstOrDefault(x => x.Value == parameters.Values.Max()).Key;
 
@@ -112,8 +114,8 @@ namespace ZapReport.Components
                 table.Cell().Text($"{totalImages.ToString("0")}");
                 table.Cell().Text("    " + Translate.GetString("TotalkVImagesForAA")).Style(Style.Bold);
                 table.Cell().Text($"{totalAAImages.ToString("0")}");
-                table.Cell().Text("    " + Translate.GetString("TotalkVImagesForTA")).Style(Style.Bold);
-                table.Cell().Text($"{totalTAImages.ToString("0")}");
+                //table.Cell().Text("    " + Translate.GetString("TotalkVImagesForTA")).Style(Style.Bold);
+                //table.Cell().Text($"{totalTAImages.ToString("0")}");
                 table.Cell().Text("    " + Translate.GetString("TotalkVImagesForInTreatment")).Style(Style.Bold);
                 table.Cell().Text($"{totalInTreatmentImages.ToString("0")}");
                 table.Cell().Text(Translate.GetString("TotalkVDose")).Style(Style.Bold);
