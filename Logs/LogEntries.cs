@@ -312,6 +312,11 @@ namespace ZapReport.Objects
 
         private string GetNextLine()
         {
+            if (_files == null || _files.Count == 0) 
+            {
+                return null;
+            }
+
             // Is this the first call?
             if (_fileIndex == -1)
             {
