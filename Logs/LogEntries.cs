@@ -298,9 +298,11 @@ namespace ZapReport.Objects
                     beam.Axial = double.Parse(match.Groups[7].Value, CultureInfo.InvariantCulture);
                     beam.Oblique = double.Parse(match.Groups[8].Value, CultureInfo.InvariantCulture);
                     fraction.PlanName = match.Groups[9].Value;
+                }
 
+                if (LogRegEx.RegexGantryMoveCompleted.IsMatch(line))
+                {
                     // Last entry in the log file for this content
-
                     return beam;
                 }
 
