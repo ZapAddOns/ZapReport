@@ -273,7 +273,7 @@ namespace ZapReport.Objects
 
                     beam.DeliveredMU = double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
                     beam.ImagerMU = double.Parse(match.Groups[5].Value, CultureInfo.InvariantCulture);
-                    beam.IsFlagged = match.Groups[7].Value.ToUpper() == "YES" ? true : false;
+                    beam.IsFlagged = match.Groups[8].Value.ToUpper() == "YES" ? true : false;
                 }
 
                 if (LogRegEx.RegexCumulative.IsMatch(line))
