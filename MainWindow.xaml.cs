@@ -363,7 +363,7 @@ namespace ZapReport
             }
 
             var planData = _client.GetPlanDataForPlan(plan);
-            var user = _userList?.Where(u => u.UserID == planData.Approver).FirstOrDefault();
+            var user = _userList?.Where(u => u.UserID.ToUpper() == planData.Approver.ToUpper()).FirstOrDefault();
 
             if (user != null && cbPhysician.Items != null && cbPhysician.Items.Contains(user.Name))
             {
