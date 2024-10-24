@@ -26,12 +26,12 @@ namespace ZapReport.Objects
 
         public List<string> PlanNames { get => _logEntries.Keys.ToList(); }
 
-        public void CreateLogEntries(string planName, DateTime startTime)
+        public void CreateLogEntries(string planName, DateTime startTime, DateTime endTime)
         {
             // Clear all log entries in case this function is called again
             _logEntries = new Dictionary<string, List<LogFractionEntry>>();
 
-            var fraction = GetNextFraction(planName, startTime);
+            var fraction = GetNextFraction(planName, startTime, endTime);
             var totalEntries = 0;
 
             while (fraction != null)
@@ -46,7 +46,7 @@ namespace ZapReport.Objects
                     _logEntries[fraction.PlanName].Add(fraction);
                 }
 
-                fraction = GetNextFraction(planName, startTime);
+                fraction = GetNextFraction(planName, startTime, endTime);
             }
 
             UpdateIsocenterValues();
@@ -135,7 +135,7 @@ namespace ZapReport.Objects
             }
         }
 
-        private LogFractionEntry GetNextFraction(string planName, DateTime startTime)
+        private LogFractionEntry GetNextFraction(string planName, DateTime startTime, DateTime endTime)
         {
             LogFractionEntry fraction;
             LogIsocenterEntry isocenter = null;
@@ -151,7 +151,7 @@ namespace ZapReport.Objects
                 {
                     match = LogRegEx.RegexFractionStart.Match(line);
 
-                    if (match.Groups[3].Value == planName)
+                    if (match.Groups[3].Value == planName && CheckDate(match.Groups[1].Value, match.Groups[2].Value, startTime, endTime))
                     { 
                         break; 
                     }
@@ -352,6 +352,23 @@ namespace ZapReport.Objects
             }
 
             return line;
+        }
+
+        private bool CheckDate(string strDate, string strTime, DateTime startTime, DateTime endTime)
+        {
+            string strDateTime = strDate + " " + strTime;
+            DateTime dateTime;
+
+            try
+            {
+                dateTime = DateTime.ParseExact(strDateTime, "MM.dd.yyyy HH:mm:ss.FFF", null);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return startTime <= dateTime && dateTime <= endTime;
         }
     }
 }
