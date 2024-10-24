@@ -15,7 +15,7 @@ ZapReport is a tool to print planning and treatment reports for the Zap-X system
 9.	Search for the entry “Folder“ and replace the content with the path to the folder, where you want to save the reports. If there is a backslash in your path, then replace it with two backslashes, e.g. if you want to save your reports at “.\Reports“ use “.\\\\Reports“.
 10.	Search for entry “Culture“ and set your right culture. The first part is for the language (currently you can enter “en“ or “de“, the second is for the regional settings. E.g. “de-CH“ or “en-US“ would be valid entries.
 11.	Search for entry “DoNotPrintPTVsWith“ and add all elements, that you don’t want to have in the list of PTVs. E.g [“Physics“, “Temp“] will exclude all PTVs, that contain the text “Physics“ or “Temp“ in their name. The text is checked case insensitive.
-12.	Search for entry “DoNotPrintVOIsWith“ and add all elements, that you don’t want to exclude in the list of VOIs. E.g [“Body“, “Tune“] will exclude all VOIs, that contain the text “Body“ or “Tune“ in their name. The text is checked case insensitive.
+12.	Search for entry “DoNotPrintVOIsWith“ and add all elements, that you don’t want to include in the list of VOIs. E.g [“Body“, “Tune“] will exclude all VOIs, that contain the text “Body“ or “Tune“ in their name. The text is checked case insensitive.
 13.	Search for entry “StructureForVolumes“ and replace the entry with the name of the structure you want to use to calculate the V10 and V12 volumes. Normally this is „Brain“.
 14.	Save the CFG file
 
