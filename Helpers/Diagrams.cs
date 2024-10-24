@@ -17,6 +17,12 @@ namespace ZapReport.Helpers
 
         public static byte[] GenerateRotationsPlot(Size size, Fraction fraction, string caption)
         {
+            if (fraction.LogData == null)
+            {
+                _logger.Log(LogLevel.Info, $"No log data found for fraction {fraction.ID}");
+                return null;
+            }
+
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
             if (logData == null)
