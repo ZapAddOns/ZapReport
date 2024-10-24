@@ -55,7 +55,7 @@ namespace ZapReport.Components
                     var files = LogFiles.SortFiles(LogFiles.CreateListOfFiles(rootPath, fraction.StartTime));
                     var entries = new LogEntries(files);
 
-                    entries.CreateLogEntries(_printData.PlanData.PlanName, fraction.StartTime);
+                    entries.CreateLogEntries(_printData.PlanData.PlanName, fraction.StartTime, fraction.EndTime);
 
                     fraction.LogData = entries.GetEntriesForPlanAndDate(_printData.PlanData.PlanName, fraction.StartTime);
                 }
