@@ -59,7 +59,7 @@ namespace ZapReport.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("FractionId"));
+                    header.Cell().Element(Style.TableHeaderCenter).Text(Translate.GetString("FractionId"));
                     header.Cell().Element(Style.TableHeaderCenter).Text(Translate.GetString("SetupTime"));
                     header.Cell().Element(Style.TableHeaderCenter).Text(Translate.GetString("GantryTime"));
                     header.Cell().Element(Style.TableHeaderCenter).Text(Translate.GetString("TableTime"));

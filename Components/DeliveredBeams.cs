@@ -59,8 +59,8 @@ namespace ZapReport.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("Fraction"));
-                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("IsocenterId"));
+                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("Fraction"));
+                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("IsocenterId"));
                     header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("NodeId"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("PlanMU"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("DeliveredMU"));
