@@ -96,8 +96,6 @@ namespace ZapReport.Components
 
                             table.Cell().Element(Style.TableContentCenter).Text($"{(images > 0 ? images.ToString("0") : "")}");
 
-                            // System.Diagnostics.Debug.WriteLine($"{beam.EstimatedUnitDoseAtMVDetector} zu {beam.EstimatedUnitDoseAtMVDetector2}");
-
                             nodeID++;
                         }
 

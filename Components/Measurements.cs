@@ -149,7 +149,6 @@ namespace ZapReport.Components
 
                     if (svg != null)
                     {
-                        _logger.Info($"SVG: {svg}");
                         column.Item().PaddingTop(10).Svg(SvgImage.FromText(svg)).FitWidth();
                     }
 
@@ -160,7 +159,6 @@ namespace ZapReport.Components
 
                     if (svg != null)
                     {
-                        _logger.Info($"SVG: {svg}");
                         column.Item().PaddingTop(10).Svg(SvgImage.FromText(svg)).FitWidth();
                     }
                 }
