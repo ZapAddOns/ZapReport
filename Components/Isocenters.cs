@@ -55,7 +55,7 @@ namespace ZapReport.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("Id"));
+                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("Id"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Collimator"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("X"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Y"));

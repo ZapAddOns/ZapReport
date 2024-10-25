@@ -42,7 +42,7 @@ namespace ZapReport.Components
             {
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.ConstantColumn(80);
+                    columns.ConstantColumn(40);
                     columns.ConstantColumn(80);
                     columns.ConstantColumn(70);
                     columns.ConstantColumn(70);
@@ -52,7 +52,7 @@ namespace ZapReport.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("IsocenterId"));
+                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("IsocenterId"));
                     header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("NodeId"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("AxialDegrees"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("ObliqueDegrees"));
