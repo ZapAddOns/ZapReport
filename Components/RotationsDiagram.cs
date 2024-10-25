@@ -72,7 +72,7 @@ namespace ZapReport.Components
 
             container.EnsureSpace(400).Column(column =>
             {
-                var size = new ImageSize(2100, 1300);
+                var size = new Size(2100, 1300);
 
                 column.Item().Text(ComponentCaption).Style(Helpers.Style.Title);
 
@@ -87,11 +87,11 @@ namespace ZapReport.Components
 
                     var date = fraction.StartTime;
                     var text = string.Format(Translate.GetString("RotationDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
-                    var image = Diagrams.GenerateRotationsPlot(size, fraction, text);
+                    var svg = Diagrams.GenerateRotationsPlot(size, fraction, text);
 
-                    if (image != null)
+                    if (svg != null)
                     {
-                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                        column.Item().PaddingTop(10).Svg(SvgImage.FromText(svg)).FitWidth();
                     }
                 }
             });

@@ -112,7 +112,7 @@ namespace ZapReport.Components
 
             container.EnsureSpace(600).Column(column =>
             {
-                var size = new ImageSize(2000, 600);
+                var size = new Size(2000, 600);
                 var text = string.Empty;
                 var date = DateTime.Now;
 
@@ -145,21 +145,23 @@ namespace ZapReport.Components
 
                     date = fraction.StartTime;
                     text = string.Format(Translate.GetString("RotationDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
-                    var image = Diagrams.GenerateRotationsPlot(size, fraction, text);
+                    var svg = Diagrams.GenerateRotationsPlot(size, fraction, text);
 
-                    if (image != null)
+                    if (svg != null)
                     {
-                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                        _logger.Info($"SVG: {svg}");
+                        column.Item().PaddingTop(10).Svg(SvgImage.FromText(svg)).FitWidth();
                     }
 
                     // Print MVImager diagram
 
                     text = string.Format(Translate.GetString("MVImagerDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
-                    image = Diagrams.GenerateMVImagerPlot(size, fraction, text);
+                    svg = Diagrams.GenerateMVImagerPlot(size, fraction, text);
 
-                    if (image != null)
+                    if (svg != null)
                     {
-                        column.Item().PaddingTop(10).Image(image).FitWidth();
+                        _logger.Info($"SVG: {svg}");
+                        column.Item().PaddingTop(10).Svg(SvgImage.FromText(svg)).FitWidth();
                     }
                 }
             });

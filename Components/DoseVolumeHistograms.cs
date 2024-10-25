@@ -12,7 +12,6 @@ namespace ZapReport.Components
     {
         private PlanConfig _config;
         private PrintData _printData;
-        private byte[] _image;
 
         public static new string ComponentName = "DoseVolumeHistograms";
 
@@ -22,7 +21,6 @@ namespace ZapReport.Components
         {
             _config = config;
             _printData = printData;
-            _image = null;
         }
 
         public override void Compose(IContainer container)
@@ -31,19 +29,13 @@ namespace ZapReport.Components
             {
                 //column.Item().Width(0).Height(0).Canvas((canvas, size) => start = canvas.TotalMatrix.TransY / canvas.TotalMatrix.ScaleY);
                 column.Item().PageBreak();
-                column.Item().RotateLeft().Image(GeneratePlot);
+                column.Item().RotateLeft().Svg(GeneratePlot);
                 column.Item().PageBreak();
             });
         }
 
-        private byte[] GeneratePlot(ImageSize size)
+        private string GeneratePlot(Size size)
         {
-            if (_image != null)
-            { 
-                return _image; 
-            }
-
-            // Size given in 0.1 mm
             var plot = new ScottPlot.Plot();
 
             plot.Axes.Title.Label.Text = ComponentCaption;
@@ -104,9 +96,7 @@ namespace ZapReport.Components
                 }
             }
 
-            plot.ScaleFactor = 4;
-
-            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
+            return plot.GetSvgHtml((int)size.Width, (int)size.Height);
         }
     }
 }

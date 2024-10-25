@@ -17,7 +17,7 @@ namespace ZapReport.Helpers
     {
         readonly static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public static byte[] GenerateRotationsPlot(ImageSize size, Fraction fraction, string caption)
+        public static string GenerateRotationsPlot(Size size, Fraction fraction, string caption)
         {
             if (fraction.LogData == null)
             {
@@ -135,6 +135,7 @@ namespace ZapReport.Helpers
 
             var pitchAAPlot = plot.Add.Scatter(pitchAAXs, pitchAAYs);
             pitchAAPlot.Color = colorAA;
+            pitchAAPlot.LineStyle = LineStyle.None;
             pitchAAPlot.MarkerShape = MarkerShape.OpenCircle;
             pitchAAPlot.MarkerSize = 12;
 
@@ -146,6 +147,7 @@ namespace ZapReport.Helpers
 
             var rollAAPlot = plot.Add.Scatter(rollAAXs, rollAAYs);
             rollAAPlot.Color = colorAA;
+            rollAAPlot.LineStyle = LineStyle.None;
             rollAAPlot.MarkerShape = MarkerShape.OpenCircle;
             rollAAPlot.MarkerSize = 12;
 
@@ -158,6 +160,7 @@ namespace ZapReport.Helpers
             var yawAAPlot = plot.Add.Scatter(yawAAXs, yawAAYs);
             yawAAPlot.Color = colorAA;
             yawAAPlot.LegendText = Translate.GetString("AutoAlignment");
+            yawAAPlot.LineStyle = LineStyle.None;
             yawAAPlot.MarkerShape = MarkerShape.OpenCircle;
             yawAAPlot.MarkerSize = 12;
 
@@ -167,12 +170,12 @@ namespace ZapReport.Helpers
             legend.Alignment = legendLocation;
             legend.Padding = new PixelPadding(10);
 
-            plot.ScaleFactor = 4;
+            plot.ScaleFactor = 2;
 
-            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
+            return plot.GetSvgHtml((int)size.Width, (int)size.Height);
         }
 
-        public static byte[] GenerateMVImagerPlot(ImageSize size, Fraction fraction, string caption)
+        public static string GenerateMVImagerPlot(Size size, Fraction fraction, string caption)
         {
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
@@ -282,6 +285,7 @@ namespace ZapReport.Helpers
             var flagsPlot = plot.Add.Scatter(flagsXs, flagsYs);
             flagsPlot.Color = colorFlags;
             flagsPlot.LegendText = Translate.GetString("Flagged");
+            flagsPlot.LineStyle = LineStyle.None;
             flagsPlot.MarkerShape = MarkerShape.Eks;
             flagsPlot.MarkerSize = 8;
 
@@ -291,9 +295,9 @@ namespace ZapReport.Helpers
             legend.Alignment = legendLocation;
             legend.Padding = new PixelPadding(10);
 
-            plot.ScaleFactor = 4;
+            plot.ScaleFactor = 2;
 
-            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
+            return plot.GetSvgHtml((int)size.Width, (int)size.Height);
         }
     }
 }
