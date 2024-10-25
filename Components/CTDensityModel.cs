@@ -43,7 +43,7 @@ namespace ZapReport.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().Border(Style.BorderSize).Element(Style.TableHeaderCenter).AlignLeft().Text(Translate.GetString("CTValue"));
+                    header.Cell().Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("CTValue"));
                     header.Cell().Border(Style.BorderSize).Element(Style.TableHeaderCenter).Text(Translate.GetString("Density"));
                     header.Cell().Border(Style.BorderSize).Element(Style.TableHeaderLeft).Text(Translate.GetString("Material"));
                 });
