@@ -47,7 +47,7 @@ namespace ZapReport.Components
                     if (File.Exists(logo))
                     {
                         // Only some logos need a translation ;-)
-                        row.ConstantItem(120).TranslateY(-22).Image(logo, ImageScaling.FitArea);
+                        row.ConstantItem(120).TranslateY(-22).Image(logo).FitArea();
                     }
                     else
                     {

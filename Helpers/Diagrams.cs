@@ -1,6 +1,8 @@
 ﻿using NLog;
 using QuestPDF.Infrastructure;
 using ScottPlot;
+using ScottPlot.Colormaps;
+using ScottPlot.TickGenerators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,13 +35,22 @@ namespace ZapReport.Helpers
             _logger.Log(LogLevel.Info, $"Found {logData.Isocenters.Count} isocenters");
 
             // Size given in 0.1 mm
-            var plot = new ScottPlot.Plot((int)size.Width, (int)size.Height);
+            var plot = new Plot();
 
-            plot.Title(caption, false, System.Drawing.Color.Black, 16);
+            plot.Axes.Title.Label.Text = caption;
+            plot.Axes.Title.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Title.Label.FontSize = 16;
 
-            plot.XAxis.Label(Translate.GetString("Isocenters"), System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.Label(Translate.GetString("Deviation") + " [°]", System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.TickLabelFormat((d) => $"{d}");
+            plot.Axes.Bottom.Label.Text = Translate.GetString("Isocenters");
+            plot.Axes.Bottom.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Bottom.Label.FontSize = 12;
+            plot.Axes.Bottom.Label.FontName = "Arial";
+
+            plot.Axes.Left.Label.Text = Translate.GetString("Deviation") + " [°]";
+            plot.Axes.Left.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Left.Label.FontSize = 12;
+            plot.Axes.Left.Label.FontName = "Arial";
+            plot.Axes.Left.TickGenerator = new NumericAutomatic { LabelFormatter = (d) => $"{d}" };
 
             var length = logData.Isocenters.Count;
 
@@ -96,8 +107,10 @@ namespace ZapReport.Helpers
 
             var legendLocation = Math.Abs(upperLimitY - maxY) > Math.Abs(lowerLimitY - minY) ? Alignment.UpperRight : Alignment.LowerRight;
 
-            plot.SetAxisLimitsX(0, logData.Isocenters.Count + 1);
-            plot.SetAxisLimitsY(lowerLimitY, upperLimitY);
+            plot.Axes.Bottom.Min = 0;
+            plot.Axes.Bottom.Max = logData.Isocenters.Count + 1;
+            plot.Axes.Left.Min = lowerLimitY;
+            plot.Axes.Left.Max = upperLimitY;
 
             Array.Resize<double>(ref pitchAAXs, indexAA);
             Array.Resize<double>(ref pitchAAYs, indexAA);
@@ -106,54 +119,55 @@ namespace ZapReport.Helpers
             Array.Resize<double>(ref yawAAXs, indexAA);
             Array.Resize<double>(ref yawAAYs, indexAA);
 
-            var colorPitch = System.Drawing.Color.FromArgb(255, 0, 0);
-            var colorRoll = System.Drawing.Color.FromArgb(0, 255, 0);
-            var colorYaw = System.Drawing.Color.FromArgb(0, 0, 255);
-            var colorAA = System.Drawing.Color.FromArgb(0, 0, 0);
+            var colorPitch = new ScottPlot.Color(255, 0, 0);
+            var colorRoll = new ScottPlot.Color(0, 255, 0);
+            var colorYaw = new ScottPlot.Color(0, 0, 255);
+            var colorAA = new ScottPlot.Color(0, 0, 0);
 
-            plot.XAxis.ManualTickPositions(ticks, labels);
-            plot.YAxis.ManualTickSpacing(0.5);
+            plot.Axes.Bottom.SetTicks(ticks, labels);
+            plot.Axes.Left.TickGenerator = new ScottPlot.TickGenerators.NumericFixedInterval(0.5);
 
-            var pitchPlot = plot.AddScatterLines(pitchXs, pitchYs, colorPitch, label: Translate.GetString("Pitch"));
-            pitchPlot.MarkerShape = MarkerShape.filledCircle;
+            var pitchPlot = plot.Add.Scatter(pitchXs, pitchYs);
+            pitchPlot.Color = colorPitch;
+            pitchPlot.LegendText = Translate.GetString("Pitch");
+            pitchPlot.MarkerShape = MarkerShape.FilledCircle;
             pitchPlot.MarkerSize = 7;
 
-            var pitchAAPlot = plot.AddScatterLines(pitchAAXs, pitchAAYs, colorAA, 0);
-            pitchAAPlot.MarkerShape = MarkerShape.openCircle;
+            var pitchAAPlot = plot.Add.Scatter(pitchAAXs, pitchAAYs);
+            pitchAAPlot.Color = colorAA;
+            pitchAAPlot.MarkerShape = MarkerShape.OpenCircle;
             pitchAAPlot.MarkerSize = 12;
 
-            var rollPlot = plot.AddScatterLines(rollXs, rollYs, colorRoll, label: Translate.GetString("Roll"));
-            rollPlot.MarkerShape = MarkerShape.filledTriangleUp;
+            var rollPlot = plot.Add.Scatter(rollXs, rollYs);
+            rollPlot.Color = colorRoll;
+            rollPlot.LegendText = Translate.GetString("Roll");
+            rollPlot.MarkerShape = MarkerShape.FilledTriangleUp;
             rollPlot.MarkerSize = 11;
 
-            var rollAAPlot = plot.AddScatterLines(rollAAXs, rollAAYs, colorAA, 0);
-            rollAAPlot.MarkerShape = MarkerShape.openCircle;
+            var rollAAPlot = plot.Add.Scatter(rollAAXs, rollAAYs);
+            rollAAPlot.Color = colorAA;
+            rollAAPlot.MarkerShape = MarkerShape.OpenCircle;
             rollAAPlot.MarkerSize = 12;
 
-            var yawPlot = plot.AddScatterLines(yawXs, yawYs, colorYaw, label: Translate.GetString("Yaw"));
-            yawPlot.MarkerShape = MarkerShape.filledSquare;
+            var yawPlot = plot.Add.Scatter(yawXs, yawYs);
+            yawPlot.Color = colorYaw;
+            yawPlot.LegendText = Translate.GetString("Yaw");
+            yawPlot.MarkerShape = MarkerShape.FilledSquare;
             yawPlot.MarkerSize = 7;
 
-            var yawAAPlot = plot.AddScatterLines(yawAAXs, yawAAYs, colorAA, 0, label: Translate.GetString("AutoAlignment"));
-            yawAAPlot.MarkerShape = MarkerShape.openCircle;
+            var yawAAPlot = plot.Add.Scatter(yawAAXs, yawAAYs);
+            yawAAPlot.Color = colorAA;
+            yawAAPlot.LegendText = Translate.GetString("AutoAlignment");
+            yawAAPlot.MarkerShape = MarkerShape.OpenCircle;
             yawAAPlot.MarkerSize = 12;
 
-            var legend = plot.Legend();
+            var legend = plot.Legend;
 
             legend.Orientation = Orientation.Horizontal;
-            legend.Location = legendLocation;
-            legend.Padding = 10;
+            legend.Alignment = legendLocation;
+            legend.Padding = new PixelPadding(10);
 
-            var bitmap = plot.Render((int)size.Width / 3, (int)size.Height / 3, false, 10);
-
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                return stream.ToArray();
-            }
+            return plot.GetImage((int)size.Width / 3, (int)size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
 
         public static byte[] GenerateMVImagerPlot(Size size, Fraction fraction, string caption)
@@ -166,13 +180,22 @@ namespace ZapReport.Helpers
             }
 
             // Size given in 0.1 mm
-            var plot = new ScottPlot.Plot((int)size.Width, (int)size.Height);
+            var plot = new ScottPlot.Plot();
 
-            plot.Title(caption, false, System.Drawing.Color.Black, 16);
+            plot.Axes.Title.Label.Text = caption;
+            plot.Axes.Title.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Title.Label.FontSize = 16;
 
-            plot.XAxis.Label(Translate.GetString("Beams"), System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.Label(Translate.GetString("Deviation") + " [%]", System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.TickLabelFormat((d) => $"{d}");
+            plot.Axes.Bottom.Label.Text = Translate.GetString("Beams");
+            plot.Axes.Bottom.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Bottom.Label.FontSize = 12;
+            plot.Axes.Bottom.Label.FontName = "Arial";
+
+            plot.Axes.Left.Label.Text = Translate.GetString("Deviation") + " [%]";
+            plot.Axes.Left.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Left.Label.FontSize = 12;
+            plot.Axes.Left.Label.FontName = "Arial";
+            plot.Axes.Left.TickGenerator = new NumericAutomatic { LabelFormatter = (d) => $"{d}" };
 
             var length = logData.TotalBeams;
 
@@ -227,47 +250,46 @@ namespace ZapReport.Helpers
             
             var legendLocation = Math.Abs(upperLimitY - maxY) > Math.Abs(lowerLimitY - minY) ? Alignment.UpperRight : Alignment.LowerRight;
 
-            plot.SetAxisLimitsX(0, length + 1);
-            plot.SetAxisLimitsY(lowerLimitY, upperLimitY);
+            plot.Axes.Bottom.Min = 0;
+            plot.Axes.Bottom.Max = length + 1;
+            plot.Axes.Left.Min = lowerLimitY;
+            plot.Axes.Left.Max = upperLimitY;
 
             Array.Resize<double>(ref flagsXs, indexFlags);
             Array.Resize<double>(ref flagsYs, indexFlags);
 
-            var colorValues = System.Drawing.Color.FromArgb(0, 0, 0);
-            var colorFlags = System.Drawing.Color.FromArgb(0, 0, 0);
-            var colorCum = System.Drawing.Color.FromArgb(0, 255, 0);
+            var colorValues = new ScottPlot.Color(0, 0, 0);
+            var colorFlags = new ScottPlot.Color(0, 0, 0);
+            var colorCum = new ScottPlot.Color(0, 255, 0);
 
             //plot.XAxis.ManualTickPositions(ticks, labels);
             //plot.YAxis.AutomaticTickPositions();
 
-            var cumPlot = plot.AddScatterLines(cumXs, cumYs, colorCum, label: Translate.GetString("Cum"));
-            cumPlot.MarkerShape = MarkerShape.filledCircle;
+            var cumPlot = plot.Add.Scatter(cumXs, cumYs);
+            cumPlot.Color = colorCum;
+            cumPlot.LegendText = Translate.GetString("Cum");
+            cumPlot.MarkerShape = MarkerShape.FilledCircle;
             cumPlot.MarkerSize = 4;
 
-            var valuesPlot = plot.AddScatterLines(valuesXs, valuesYs, colorValues, label: Translate.GetString("Beam"));
-            valuesPlot.MarkerShape = MarkerShape.filledSquare;
+            var valuesPlot = plot.Add.Scatter(valuesXs, valuesYs);
+            valuesPlot.Color = colorValues;
+            valuesPlot.LegendText = Translate.GetString("Beam");
+            valuesPlot.MarkerShape = MarkerShape.FilledSquare;
             valuesPlot.MarkerSize = 4;
 
-            var flagsPlot = plot.AddScatterLines(flagsXs, flagsYs, colorFlags, 0, label: Translate.GetString("Flagged"));
-            flagsPlot.MarkerShape = MarkerShape.eks;
+            var flagsPlot = plot.Add.Scatter(flagsXs, flagsYs);
+            flagsPlot.Color = colorFlags;
+            flagsPlot.LegendText = Translate.GetString("Flagged");
+            flagsPlot.MarkerShape = MarkerShape.Eks;
             flagsPlot.MarkerSize = 8;
 
-            var legend = plot.Legend();
+            var legend = plot.Legend;
 
             legend.Orientation = Orientation.Horizontal;
-            legend.Location = legendLocation;
-            legend.Padding = 10;
+            legend.Alignment = legendLocation;
+            legend.Padding = new PixelPadding(10);
 
-            var bitmap = plot.Render((int)size.Width / 3, (int)size.Height / 3, false, 10);
-
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                return stream.ToArray();
-            }
+            return plot.GetImage((int)size.Width / 3, (int)size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using System.IO;
+using ScottPlot.TickGenerators;
 using System.Linq;
 using ZapReport.Extensions;
 using ZapReport.Helpers;
@@ -31,12 +31,12 @@ namespace ZapReport.Components
             {
                 //column.Item().Width(0).Height(0).Canvas((canvas, size) => start = canvas.TotalMatrix.TransY / canvas.TotalMatrix.ScaleY);
                 column.Item().PageBreak();
-                column.Item().Image(GeneratePlot);
+                column.Item().RotateLeft().Image(GeneratePlot);
                 column.Item().PageBreak();
             });
         }
 
-        private byte[] GeneratePlot(Size size)
+        private byte[] GeneratePlot(ImageSize size)
         {
             if (_image != null)
             { 
@@ -44,12 +44,22 @@ namespace ZapReport.Components
             }
 
             // Size given in 0.1 mm
-            var plot = new ScottPlot.Plot((int)size.Height, (int)size.Width);
+            var plot = new ScottPlot.Plot();
 
-            plot.Title(ComponentCaption, true, System.Drawing.Color.Black, 16);
-            plot.XAxis.Label(Translate.GetString("Dose") + " [cGy]", System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.Label(Translate.GetString("Volume"), System.Drawing.Color.Black, size: 12, fontName: "Arial");
-            plot.YAxis.TickLabelFormat((d) => $"{d * 100:0} %");
+            plot.Axes.Title.Label.Text = ComponentCaption;
+            plot.Axes.Title.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Title.Label.FontSize = 16;
+
+            plot.Axes.Bottom.Label.Text = Translate.GetString("Dose") + " [cGy]";
+            plot.Axes.Bottom.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Bottom.Label.FontSize = 12;
+            plot.Axes.Bottom.Label.FontName = "Arial";
+
+            plot.Axes.Left.Label.Text = Translate.GetString("Volume");
+            plot.Axes.Left.Label.ForeColor = ScottPlot.Color.Gray(0);
+            plot.Axes.Left.Label.FontSize = 12;
+            plot.Axes.Left.Label.FontName = "Arial";
+            plot.Axes.Left.TickGenerator = new NumericAutomatic { LabelFormatter = (d) => $"{d * 100:0}" };
 
             if (_printData.PlanDVData.DVHOverallMaxDose == 0)
             {
@@ -57,8 +67,10 @@ namespace ZapReport.Components
                 return null;
             }
 
-            plot.SetAxisLimitsY(0, 1.05);
-            plot.SetAxisLimitsX(0, _printData.PlanDVData.DVHOverallMaxDose);
+            plot.Axes.Bottom.Min = 0;
+            plot.Axes.Bottom.Max = _printData.PlanDVData.DVHOverallMaxDose;
+            plot.Axes.Left.Min = 0;
+            plot.Axes.Left.Max = 1.05;
 
             if (_printData.PlanDVData?.DVData != null)
             {
@@ -78,34 +90,24 @@ namespace ZapReport.Components
                     if (!print)
                         continue;
 
-                    var color = System.Drawing.Color.Black;
+                    var color = new ScottPlot.Color(0, 0, 0);
 
                     if (contour != null)
                     {
                         var colorArray = contour.ColorAsArray(_config);
-                        color = System.Drawing.Color.FromArgb(colorArray[1], colorArray[2], colorArray[3]);
+                        color = ScottPlot.Color.FromColor(System.Drawing.Color.FromArgb(255, colorArray[1], colorArray[2], colorArray[3]));
 
-                        plot.AddScatterLines(dvData.DVHDoseValues, dvData.DVHVolumePercentValues, color);
+                        var scatter = plot.Add.Scatter(dvData.DVHDoseValues, dvData.DVHVolumePercentValues);
+                        scatter.Color = color;
                     }
                 }
             }
 
             // plt.AddTooltip(label: "Special Point", x: 17, y: ys[17]);
 
-            var bitmap = plot.Render((int)size.Height / 3, (int)size.Width / 3, false, 10);
+            var bitmap = plot.GetImage((int)size.Height / 3, (int)size.Width / 3);
 
-            bitmap.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
-
-            using (var stream = new MemoryStream())
-            {
-                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-
-                stream.Seek(0, SeekOrigin.Begin);
-
-                _image = stream.ToArray();
-            }
-
-            return _image;
+            return bitmap.GetImageBytes(ScottPlot.ImageFormat.Png);
         }
     }
 }
