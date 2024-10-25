@@ -55,7 +55,7 @@ namespace ZapReport.Components
             plot.Axes.Bottom.Label.FontSize = 12;
             plot.Axes.Bottom.Label.FontName = "Arial";
 
-            plot.Axes.Left.Label.Text = Translate.GetString("Volume");
+            plot.Axes.Left.Label.Text = Translate.GetString("Volume") + " [%]";
             plot.Axes.Left.Label.ForeColor = ScottPlot.Color.Gray(0);
             plot.Axes.Left.Label.FontSize = 12;
             plot.Axes.Left.Label.FontName = "Arial";
