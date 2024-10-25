@@ -32,7 +32,6 @@ namespace ZapReport.Objects
             _logEntries = new Dictionary<string, List<LogFractionEntry>>();
 
             var fraction = GetNextFraction(planName, startTime, endTime);
-            var totalEntries = 0;
 
             while (fraction != null)
             {

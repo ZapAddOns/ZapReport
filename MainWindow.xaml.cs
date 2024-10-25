@@ -48,7 +48,7 @@ namespace ZapReport
             {
                 CreateConfig();
             }
-            catch (FileNotFoundException _)
+            catch (FileNotFoundException)
             {
                 while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapReport.cfg"), Translate.GetString("FileNotFoundErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
                     ;

@@ -47,7 +47,6 @@ namespace ZapReport.Components
         private void ComposekVImagesSummary(IContainer container)
         {
             int totalInTreatmentImages = 0;
-            int totalAlignmentImages = 0;
             int totalAAImages = 0;
             double totalDoseInMicroGy = 0.0;
             Dictionary<(short, short, short), int> parameters = new Dictionary<(short, short, short), int>();
