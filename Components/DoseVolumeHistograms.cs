@@ -99,15 +99,12 @@ namespace ZapReport.Components
 
                         var scatter = plot.Add.Scatter(dvData.DVHDoseValues, dvData.DVHVolumePercentValues);
                         scatter.Color = color;
+                        scatter.MarkerShape = ScottPlot.MarkerShape.None;
                     }
                 }
             }
 
-            // plt.AddTooltip(label: "Special Point", x: 17, y: ys[17]);
-
-            var bitmap = plot.GetImage((int)size.Height / 3, (int)size.Width / 3);
-
-            return bitmap.GetImageBytes(ScottPlot.ImageFormat.Png);
+            return plot.GetImage(size.Width / 3, size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
     }
 }
