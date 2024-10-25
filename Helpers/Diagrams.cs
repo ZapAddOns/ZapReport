@@ -17,7 +17,7 @@ namespace ZapReport.Helpers
     {
         readonly static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public static byte[] GenerateRotationsPlot(Size size, Fraction fraction, string caption)
+        public static byte[] GenerateRotationsPlot(ImageSize size, Fraction fraction, string caption)
         {
             if (fraction.LogData == null)
             {
@@ -167,10 +167,12 @@ namespace ZapReport.Helpers
             legend.Alignment = legendLocation;
             legend.Padding = new PixelPadding(10);
 
-            return plot.GetImage((int)size.Width / 3, (int)size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
+            plot.ScaleFactor = 4;
+
+            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
 
-        public static byte[] GenerateMVImagerPlot(Size size, Fraction fraction, string caption)
+        public static byte[] GenerateMVImagerPlot(ImageSize size, Fraction fraction, string caption)
         {
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
@@ -289,7 +291,9 @@ namespace ZapReport.Helpers
             legend.Alignment = legendLocation;
             legend.Padding = new PixelPadding(10);
 
-            return plot.GetImage((int)size.Width / 3, (int)size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
+            plot.ScaleFactor = 4;
+
+            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
     }
 }

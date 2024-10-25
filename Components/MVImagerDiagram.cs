@@ -72,7 +72,7 @@ namespace ZapReport.Components
 
             container.EnsureSpace(400).Column(column =>
             {
-                var size = new Size(2100, 1300);
+                var size = new ImageSize(2100, 1300);
 
                 column.Item().Text(ComponentCaption).Style(Helpers.Style.Title);
 

@@ -104,7 +104,9 @@ namespace ZapReport.Components
                 }
             }
 
-            return plot.GetImage(size.Width / 3, size.Height / 3).GetImageBytes(ScottPlot.ImageFormat.Png);
+            plot.ScaleFactor = 4;
+
+            return plot.GetImage(size.Width, size.Height).GetImageBytes(ScottPlot.ImageFormat.Png);
         }
     }
 }

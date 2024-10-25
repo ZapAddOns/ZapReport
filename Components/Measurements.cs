@@ -112,7 +112,7 @@ namespace ZapReport.Components
 
             container.EnsureSpace(600).Column(column =>
             {
-                var size = new Size(2000, 600);
+                var size = new ImageSize(2000, 600);
                 var text = string.Empty;
                 var date = DateTime.Now;
 
