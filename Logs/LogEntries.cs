@@ -222,12 +222,16 @@ namespace ZapReport.Objects
 
                 if (LogRegEx.RegexFractionEnd.IsMatch(line))
                 {
+                    _logger.Log(LogLevel.Info, $"Fraction {fraction.Fraction} found");
+
                     return fraction;
                 }
 
                 line = GetNextLine();
                 pos++;
             }
+
+            _logger.Log(LogLevel.Error, $"No end of fraction found");
 
             return null;
         }
