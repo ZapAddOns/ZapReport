@@ -61,7 +61,7 @@ namespace ZapReport.Components
                 // AA images don't belong to a node
                 totalAAImages += fraction.KVImages.Where(i => i.Node == null).Count();
                 totalInTreatmentImages += fraction.KVImages.Where(i => i.Node != null).Count();
-                totalDoseInMicroGy = fraction.KVImages.Sum(i => i.KVDoseMicroGy);
+                totalDoseInMicroGy += fraction.KVImages.Sum(i => i.KVDoseMicroGy);
 
                 foreach (var treatment in fraction.Treatments)
                 {
