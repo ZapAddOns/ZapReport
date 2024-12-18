@@ -72,12 +72,16 @@ namespace ZapReport.Components
 
             container.EnsureSpace(400).Column(column =>
             {
+                _logger.Info($"Create rotation graph");
+
                 var size = new Size(2100, 1300);
 
                 column.Item().Text(ComponentCaption).Style(Helpers.Style.Title);
 
                 foreach (var fraction in _printData.DeliveryData.Fractions)
                 {
+                    _logger.Info($"Create rotation graph for fraction {fraction.StartTime}");
+
                     // Is this the fraction we want to print or do we print them all
                     if (_printData.DeliveredFraction > 0 && fraction.ID != _printData.DeliveredFraction)
                         continue;
@@ -85,9 +89,13 @@ namespace ZapReport.Components
                     if (fraction.LogData == null)
                         continue;
 
+                    _logger.Info($"Start rotation graph for fraction {fraction.StartTime}");
+
                     var date = fraction.StartTime;
                     var text = string.Format(Translate.GetString("RotationDiagramCaption"), fraction.ID, date.ToShortDateString(), date.ToShortTimeString());
                     var svg = Diagrams.GenerateRotationsPlot(size, fraction, text);
+
+                    _logger.Info($"End rotation graph for fraction {fraction.StartTime}");
 
                     if (svg != null)
                     {
