@@ -48,7 +48,7 @@ namespace ZapReport.Components
                     columns.ConstantColumn(70);
                     columns.ConstantColumn(70);
                     columns.ConstantColumn(70);
-                    //columns.RelativeColumn();
+                    columns.RelativeColumn();
                     columns.RelativeColumn();
                     columns.RelativeColumn();
                 });
@@ -60,14 +60,13 @@ namespace ZapReport.Components
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("X"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Y"));
                     header.Cell().BorderTop(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Z"));
-                    //header.Cell().BorderTop(borderSize).Element(TableHeaderCenterNoBorder).Text(Translate.GetString("Dose"));
                     header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Beams"));
+                    header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("MU"));
                     header.Cell().RowSpan(2).Border(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text(Translate.GetString("Alignment"));
                     header.Cell().BorderBottom(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text("[mm]");
                     header.Cell().BorderBottom(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text("[mm]");
                     header.Cell().BorderBottom(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text("[mm]");
                     header.Cell().BorderBottom(Style.BorderSize).Element(Style.TableHeaderCenterNoBorder).Text("[mm]");
-                    //header.Cell().BorderBottom(borderSize).Element(TableHeaderCenterNoBorder).Text("[cGy]");
                 });
 
                 double oldX = double.MinValue;
@@ -83,8 +82,8 @@ namespace ZapReport.Components
                     table.Cell().Element(Style.TableContentCenter).Text($"{isocenterFromPlanData.CTTarget[0].ToString("#,#0.00")}");
                     table.Cell().Element(Style.TableContentCenter).Text($"{isocenterFromPlanData.CTTarget[1].ToString("#,#0.00")}");
                     table.Cell().Element(Style.TableContentCenter).Text($"{isocenterFromPlanData.CTTarget[2].ToString("#,#0.00")}");
-                    //table.Cell().Element(TableContentCenter).Text($"???");  // {isocenter.TargetDose.ToString("#,#0.0")}");
                     table.Cell().Element(Style.TableContentCenter).Text($"{isocenter.IsocenterBeamSet.Beams.Where(b => b.MU > 0).Count().ToString("0")}");
+                    table.Cell().Element(Style.TableContentCenter).Text($"{isocenter.IsocenterBeamSet.Beams.Where(b => b.MU > 0).Select(b => b.MU).Sum().ToString("0.0")}");
 
                     if (oldX == double.MinValue && oldY == double.MinValue && oldZ == double.MinValue)
                     {
