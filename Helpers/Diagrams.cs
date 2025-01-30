@@ -164,11 +164,7 @@ namespace ZapReport.Helpers
             yawAAPlot.MarkerShape = MarkerShape.OpenCircle;
             yawAAPlot.MarkerSize = 12;
 
-            var legend = plot.Legend;
-
-            legend.Orientation = Orientation.Horizontal;
-            legend.Alignment = legendLocation;
-            legend.Padding = new PixelPadding(10);
+            plot.ShowLegend(Edge.Right);
 
             plot.ScaleFactor = 2;
 
@@ -272,7 +268,7 @@ namespace ZapReport.Helpers
 
             var cumPlot = plot.Add.Scatter(cumXs, cumYs);
             cumPlot.Color = colorCum;
-            cumPlot.LegendText = Translate.GetString("Cum");
+            cumPlot.LegendText = Translate.GetString("Cum") + $" ({cumYs.Last():0.0} %)";
             cumPlot.MarkerShape = MarkerShape.FilledCircle;
             cumPlot.MarkerSize = 4;
 
@@ -289,11 +285,7 @@ namespace ZapReport.Helpers
             flagsPlot.MarkerShape = MarkerShape.Eks;
             flagsPlot.MarkerSize = 8;
 
-            var legend = plot.Legend;
-
-            legend.Orientation = Orientation.Horizontal;
-            legend.Alignment = legendLocation;
-            legend.Padding = new PixelPadding(10);
+            plot.ShowLegend(Edge.Right);
 
             plot.ScaleFactor = 2;
 
