@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace ZapReport.Objects
@@ -85,13 +86,15 @@ namespace ZapReport.Objects
             var result = new List<LogFractionEntry>();
 
             if (!_logEntries.ContainsKey(planName))
-            { 
+            {
+                _logger.Log(LogLevel.Info, $"No log entries found for plan \"{planName}\"");
+
                 return result; 
             }
 
             foreach (var entry in _logEntries[planName])
             {
-                if (entry.Time > startDate && entry.Time < endDate)
+                if (entry.Time > startDate && entry.Time < endDate && entry != null)
                 {
                     result.Add(entry);
                 }
@@ -175,6 +178,8 @@ namespace ZapReport.Objects
             fraction.PlanName = match.Groups[3].Value;
             fraction.Fraction = int.Parse(match.Groups[4].Value);
 
+            _logger.Log(LogLevel.Info, $"Start of fraction {fraction.Fraction} of plan \"{fraction.PlanName}\"");
+
             while (line != null)
             {
                 if (LogRegEx.RegexRotations.IsMatch(line))
@@ -218,11 +223,13 @@ namespace ZapReport.Objects
                     match = LogRegEx.RegexIsocenterEnd.Match(line);
 
                     isocenter.TotalTimeInSeconds = double.Parse(match.Groups[5].Value);
+
+                    _logger.Log(LogLevel.Info, $"Found end of isocenter");
                 }
 
                 if (LogRegEx.RegexFractionEnd.IsMatch(line))
                 {
-                    _logger.Log(LogLevel.Info, $"Fraction {fraction.Fraction} found");
+                    _logger.Log(LogLevel.Info, $"End of fraction {fraction.Fraction} of plan \"{fraction.PlanName}\"");
 
                     return fraction;
                 }
@@ -303,7 +310,7 @@ namespace ZapReport.Objects
                     fraction.PlanName = match.Groups[9].Value;
                 }
 
-                if (LogRegEx.RegexGantryMoveCompleted.IsMatch(line))
+                if (LogRegEx.RegexMVImageEnd.IsMatch(line))
                 {
                     // Last entry in the log file for this content
                     return beam;
