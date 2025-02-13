@@ -292,8 +292,6 @@ namespace ZapReport.Objects
 
                     beam.CumulativeDeliveredMU = double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                     beam.CumulativeImagerMU = double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
-                    //result.CumulativeDifferenceMU = double.Parse(match.Groups[5].Value, CultureInfo.InvariantCulture);
-                    //result.CumulativeDifferencePercent = double.Parse(match.Groups[6].Value, CultureInfo.InvariantCulture) * 100.0;
                 }
 
                 if (LogRegEx.RegexSystemData.IsMatch(line))
@@ -308,11 +306,7 @@ namespace ZapReport.Objects
                     beam.Axial = double.Parse(match.Groups[7].Value, CultureInfo.InvariantCulture);
                     beam.Oblique = double.Parse(match.Groups[8].Value, CultureInfo.InvariantCulture);
                     fraction.PlanName = match.Groups[9].Value;
-                }
 
-                if (LogRegEx.RegexMVImageEnd.IsMatch(line))
-                {
-                    // Last entry in the log file for this content
                     return beam;
                 }
 
