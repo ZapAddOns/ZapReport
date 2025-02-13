@@ -28,7 +28,9 @@ namespace ZapReport.Helpers
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
             if (logData == null)
-            { 
+            {
+                _logger.Log(LogLevel.Warn, $"No rotation data for fraction {fraction.ID} found in log files");
+
                 return null;
             }
 
@@ -177,6 +179,8 @@ namespace ZapReport.Helpers
 
             if (logData == null)
             {
+                _logger.Log(LogLevel.Warn, $"No MV imager data for fraction {fraction.ID} found in log files");
+
                 return null;
             }
 
