@@ -9,8 +9,6 @@ namespace ZapReport.Objects
 
         public int ID { get; set; }
 
-        public int Index { get; set; }
-
         public double ColliSize { get; set; }
 
         public List<LogBeamEntry> Beams { get; set; } = new List<LogBeamEntry>();
