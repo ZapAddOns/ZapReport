@@ -1,8 +1,10 @@
 ﻿using NLog;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using System.Collections.Generic;
 using System.IO;
 using ZapReport.Helpers;
+using ZapReport.Logs;
 using ZapReport.Objects;
 using ZapTranslation;
 
@@ -52,12 +54,7 @@ namespace ZapReport.Components
 
                 if (fraction.LogData == null)
                 {
-                    var files = LogFiles.SortFiles(LogFiles.CreateListOfFiles(rootPath, fraction.StartTime));
-                    var entries = new LogEntries(files);
-
-                    entries.CreateLogEntries(_printData.PlanData.PlanName, fraction.StartTime, fraction.EndTime);
-
-                    fraction.LogData = entries.GetEntriesForPlanAndDate(_printData.PlanData.PlanName, fraction.StartTime);
+                    fraction.LogData = LogData.CreateLogData(rootPath, _printData.PlanData.PlanName, fraction);
                 }
 
                 foundLogs = foundLogs | fraction.LogData != null;

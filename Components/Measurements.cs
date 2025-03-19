@@ -4,7 +4,7 @@ using QuestPDF.Infrastructure;
 using System;
 using System.IO;
 using ZapReport.Helpers;
-using ZapReport.Objects;
+using ZapReport.Logs;
 using ZapTranslation;
 
 namespace ZapReport.Components
@@ -52,7 +52,7 @@ namespace ZapReport.Components
                     if (_printData.DeliveredFraction > 0 && fraction.ID != _printData.DeliveredFraction)
                         continue;
 
-                    var path = Path.Combine(rootPath, fraction.UUID);
+                    var path = System.IO.Path.Combine(rootPath, fraction.UUID);
 
                     if (Directory.Exists(path))
                     {
@@ -93,12 +93,7 @@ namespace ZapReport.Components
 
                     if (fraction.LogData == null)
                     {
-                        var files = LogFiles.SortFiles(LogFiles.CreateListOfFiles(rootPath, fraction.StartTime));
-                        var entries = new LogEntries(files);
-
-                        entries.CreateLogEntries(_printData.PlanData.PlanName, fraction.StartTime, fraction.EndTime);
-
-                        fraction.LogData = entries.GetEntriesForPlanAndDate(_printData.PlanData.PlanName, fraction.StartTime);
+                        fraction.LogData = LogData.CreateLogData(rootPath, _printData.PlanData.PlanName, fraction);
                     }
 
                     foundLogs = foundLogs | fraction.LogData != null;
