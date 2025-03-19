@@ -8,6 +8,7 @@ namespace ZapReport.Objects
         // [+-]?[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*[eE][+-]?[0-9]+?
 
         // Regexs for getting information from the different log file lines.
+        public static Regex RegexDateTime = new Regex(@"(\d{2}.\d{2}.\d{4})\s(\d{2}:\d{2}:\d{2}\.\d{3}).*", RegexOptions.Compiled);
         public static Regex RegexFractionStart = new Regex(@"(\d{2}.\d{2}.\d{4})\s(\d{2}:\d{2}:\d{2}\.\d{3}).*\{.EventType.:.FractionLoaded.,.EventInfo.:\{.PlanName.:.(.*).,.FractionId.:(\d*)\}\}", RegexOptions.Compiled);
         public static Regex RegexIsocenterStart = new Regex(@"(\d{2}.\d{2}.\d{4})\s(\d{2}:\d{2}:\d{2}\.\d{3}).*\{.EventType.:.IsoCenterStarted.,.EventInfo.:\{.IsoCenterId.:(\d*),.PathIndex.:(\d*),.BeamsRemaining.:(\d*)\}\}", RegexOptions.Compiled);
         public static Regex RegexRotations = new Regex(@"(\d{2}.\d{2}.\d{4})\s(\d{2}:\d{2}:\d{2}\.\d{3}).*Adding new rotation data points at X:\s*(\d*),\s*Pitch\s*([+-]?[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*[eE][+-]?[0-9]+?),\s*Roll\s*([+-]?[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*[eE][+-]?[0-9]+?),\s*Yaw\s*([+-]?[0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*[eE][+-]?[0-9]+?),\s*isocenterLabel\s*=\s*(\d*),\s*isAutoAlignment:\s*(\w*).*", RegexOptions.Compiled);
