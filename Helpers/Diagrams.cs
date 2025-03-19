@@ -1,13 +1,10 @@
 ﻿using NLog;
 using QuestPDF.Infrastructure;
 using ScottPlot;
-using ScottPlot.Colormaps;
 using ScottPlot.TickGenerators;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using ZapClient.Data;
 using ZapReport.Objects;
 using ZapTranslation;
 
@@ -17,7 +14,7 @@ namespace ZapReport.Helpers
     {
         readonly static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        public static string GenerateRotationsPlot(Size size, Fraction fraction, string caption)
+        public static string GenerateRotationsPlot(Size size, ZapClient.Data.Fraction fraction, string caption)
         {
             if (fraction.LogData == null)
             {
@@ -73,33 +70,34 @@ namespace ZapReport.Helpers
             var yawAAXs = new double[length];
             var yawAAYs = new double[length];
 
+            var index = 0;
             var indexAA = 0;
 
             foreach (var isocenter in logData.Isocenters)
             {
-                var index = isocenter.Value.Index - 1;
+                ticks[index] = index;
+                labels[index] = isocenter.ID.ToString("0");
 
-                ticks[index] = isocenter.Value.Index;
-                labels[index] = isocenter.Value.ID.ToString("0");
+                pitchXs[index] = index;
+                pitchYs[index] = isocenter.Rotation_Pitch;
+                rollXs[index] = index;
+                rollYs[index] = isocenter.Rotation_Roll;
+                yawXs[index] = index;
+                yawYs[index] = isocenter.Rotation_Yaw;
 
-                pitchXs[index] = isocenter.Value.Index;
-                pitchYs[index] = isocenter.Value.Rotation_Pitch;
-                rollXs[index] = isocenter.Value.Index;
-                rollYs[index] = isocenter.Value.Rotation_Roll;
-                yawXs[index] = isocenter.Value.Index;
-                yawYs[index] = isocenter.Value.Rotation_Yaw;
-
-                if (isocenter.Value.IsAutoAlignment)
+                if (isocenter.IsAutoAlignment)
                 {
-                    pitchAAXs[indexAA] = isocenter.Value.Index;
-                    pitchAAYs[indexAA] = isocenter.Value.Rotation_Pitch;
-                    rollAAXs[indexAA] = isocenter.Value.Index;
-                    rollAAYs[indexAA] = isocenter.Value.Rotation_Roll;
-                    yawAAXs[indexAA] = isocenter.Value.Index;
-                    yawAAYs[indexAA] = isocenter.Value.Rotation_Yaw;
+                    pitchAAXs[indexAA] = index;
+                    pitchAAYs[indexAA] = isocenter.Rotation_Pitch;
+                    rollAAXs[indexAA] = index;
+                    rollAAYs[indexAA] = isocenter.Rotation_Roll;
+                    yawAAXs[indexAA] = index;
+                    yawAAYs[indexAA] = isocenter.Rotation_Yaw;
 
                     indexAA++;
                 }
+
+                index++;
             }
 
             var maxY = Math.Max(Math.Max(pitchYs.Max(), rollYs.Max()), yawYs.Max());
@@ -173,8 +171,14 @@ namespace ZapReport.Helpers
             return plot.GetSvgHtml((int)size.Width, (int)size.Height);
         }
 
-        public static string GenerateMVImagerPlot(Size size, Fraction fraction, string caption)
+        public static string GenerateMVImagerPlot(Size size, ZapClient.Data.Fraction fraction, string caption)
         {
+            if (fraction.LogData == null)
+            {
+                _logger.Log(LogLevel.Info, $"No log data found for fraction {fraction.ID}");
+                return null;
+            }
+
             var logData = ((List<LogFractionEntry>)fraction.LogData).FirstOrDefault();
 
             if (logData == null)
@@ -220,7 +224,7 @@ namespace ZapReport.Helpers
 
             foreach (var isocenter in logData.Isocenters)
             {
-                foreach (var beam in isocenter.Value.Beams)
+                foreach (var beam in isocenter.Beams)
                 {
                     //ticks[index] = index;
                     //labels[index] = isocenter.Value.ID.ToString("0");
@@ -248,11 +252,11 @@ namespace ZapReport.Helpers
             var lowerLimitY = Math.Floor(minY);
 
             // If there is no data
-            if (upperLimitY <= lowerLimitY) 
+            if (upperLimitY <= lowerLimitY)
             {
                 return null;
             }
-            
+
             var legendLocation = Math.Abs(upperLimitY - maxY) > Math.Abs(lowerLimitY - minY) ? Alignment.UpperRight : Alignment.LowerRight;
 
             plot.Axes.Bottom.Min = 0;
