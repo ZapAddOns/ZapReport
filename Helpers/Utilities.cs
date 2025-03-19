@@ -1,4 +1,7 @@
-﻿namespace ZapReport.Helpers
+﻿using System;
+using System.Collections.Generic;
+
+namespace ZapReport.Helpers
 {
     public static class Utilities
     {
@@ -44,6 +47,30 @@
                 return Y[X.Length - 1];
 
             return result;
+        }
+
+
+        public static bool CheckDate(string strDate, string strTime, List<(DateTime, DateTime)> dates)
+        {
+            string strDateTime = strDate + " " + strTime;
+            DateTime dateTime;
+
+            try
+            {
+                dateTime = DateTime.ParseExact(strDateTime, "MM.dd.yyyy HH:mm:ss.FFF", null);
+            }
+            catch
+            {
+                return false;
+            }
+
+            foreach (var date in dates)
+            {
+                if (date.Item1 <= dateTime && dateTime <= date.Item2)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
