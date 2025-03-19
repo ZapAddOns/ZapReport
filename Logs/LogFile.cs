@@ -1,6 +1,11 @@
 ﻿using NLog;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
+using System.Windows.Documents;
+using ZapReport.Helpers;
 
 namespace ZapReport.Objects
 {
@@ -69,9 +74,27 @@ namespace ZapReport.Objects
             return true;
         }
 
-        public string GetNextLine()
+        public string GetNextLine(List<(DateTime, DateTime)> dates)
         {
-            return _streamReader?.ReadLine();
+            var line = _streamReader.ReadLine();
+
+            if (line == null)
+                return null;
+
+            while (line != null)
+            {
+                if (LogRegEx.RegexDateTime.IsMatch(line))
+                {
+                    // Check, if lines date is valid
+                    var match = LogRegEx.RegexDateTime.Match(line);
+                    if (Utilities.CheckDate(match.Groups[1].Value, match.Groups[2].Value, dates))
+                        return line;
+                }
+
+                line = _streamReader.ReadLine();
+            }
+
+            return null;
         }
 
         public override bool Equals(object obj)
