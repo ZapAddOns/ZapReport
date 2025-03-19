@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace ZapReport.Objects
 {
@@ -11,18 +12,18 @@ namespace ZapReport.Objects
 
         #region Static Functions
 
-        public static List<LogFile> CreateListOfFiles(string name, DateTime date)
+        public static List<LogFile> CreateListOfFiles(string name, List<(DateTime, DateTime)> dates)
         {
             var result = new List<LogFile>();
 
             if (Directory.Exists(name))
             {
                 // Name is a directory
-                result.AddRange(GetAllTreatmentViewFilesInDir(name, date));
+                result.AddRange(GetAllTreatmentViewFilesInDir(name, dates));
             }
             else if (IsZipFile(name))
             {
-                result.AddRange(GetAllTreatmentViewFilesInZip(name, date));
+                result.AddRange(GetAllTreatmentViewFilesInZip(name, dates));
             }
             else if (File.Exists(name))
             {
@@ -75,7 +76,7 @@ namespace ZapReport.Objects
             return buffer[0] == 0x50 && buffer[1] == 0x4b && buffer[2] == 0x03 && buffer[3] == 0x04;
         }
 
-        private static List<LogFile> GetAllTreatmentViewFilesInDir(string path, DateTime date)
+        private static List<LogFile> GetAllTreatmentViewFilesInDir(string path, List<(DateTime, DateTime)> dates)
         {
             var result = new List<LogFile>();
 
@@ -83,9 +84,9 @@ namespace ZapReport.Objects
             {
                 if (IsZipFile(filename))
                 {
-                    result.AddRange(GetAllTreatmentViewFilesInZip(filename, date));
+                    result.AddRange(GetAllTreatmentViewFilesInZip(filename, dates));
                 }
-                if (IsCorrectFilename(filename, date))
+                if (IsCorrectFilename(filename, dates))
                 {
                     result.Add(new LogFile(Path.Combine(path, filename), "TXT", ""));
                 }
@@ -93,13 +94,13 @@ namespace ZapReport.Objects
 
             foreach (var directory in Directory.EnumerateDirectories(path))
             {
-                result.AddRange(GetAllTreatmentViewFilesInDir(directory, date));
+                result.AddRange(GetAllTreatmentViewFilesInDir(directory, dates));
             }
 
             return result;
         }
 
-        private static List<LogFile> GetAllTreatmentViewFilesInZip(string filename, DateTime date)
+        private static List<LogFile> GetAllTreatmentViewFilesInZip(string filename, List<(DateTime, DateTime)> dates)
         {
             var result = new List<LogFile>();
 
@@ -107,7 +108,7 @@ namespace ZapReport.Objects
             {
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    if (IsCorrectFilename(entry.Name, date))
+                    if (IsCorrectFilename(entry.Name, dates))
                     {
                         result.Add(new LogFile(entry.FullName, "ZIP", filename));
                     }
@@ -117,21 +118,27 @@ namespace ZapReport.Objects
             return result;
         }
 
-        private static bool IsCorrectFilename(string filename, DateTime date)
+        private static bool IsCorrectFilename(string filename, List<(DateTime, DateTime)> dates)
         {
             if (!_regexFilename.IsMatch(filename))
             {
                 return false;
             }
 
-            var match = _regexFilename.Match(filename);
-
-            if (date != null)
+            if (dates == null || dates.Count == 0)
             {
-                return match.Groups[1].Value == date.ToString("yyyy-MM-dd");
+                return false;
             }
 
-            return true;
+            foreach (var date in dates)
+            {
+                var match = _regexFilename.Match(filename);
+
+                if (match.Groups[1].Value == date.Item1.ToString("yyyy-MM-dd"))
+                    return true;
+            }
+
+            return false;
         }
 
         #endregion
