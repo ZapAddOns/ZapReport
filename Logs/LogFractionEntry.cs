@@ -15,7 +15,7 @@ namespace ZapReport.Objects
 
         public bool IsTreatment { get; set; }
 
-        public Dictionary<int, LogIsocenterEntry> Isocenters { get; set; } = new Dictionary<int, LogIsocenterEntry>();
+        public List<LogIsocenterEntry> Isocenters { get; set; } = new List<LogIsocenterEntry>();
 
         public int TotalBeams { get; set; }
     }
