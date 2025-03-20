@@ -166,6 +166,8 @@ namespace ZapReport.Helpers
 
             plot.ShowLegend(Edge.Right);
 
+            plot.Axes.Margins(horizontal: .1, vertical: .1);
+ 
             plot.ScaleFactor = 2;
 
             return plot.GetSvgHtml((int)size.Width, (int)size.Height);
@@ -294,6 +296,8 @@ namespace ZapReport.Helpers
             flagsPlot.MarkerSize = 8;
 
             plot.ShowLegend(Edge.Right);
+
+            plot.Axes.Margins(horizontal: .05, vertical: 0.1);
 
             plot.ScaleFactor = 2;
 
