@@ -166,7 +166,7 @@ namespace ZapReport.Helpers
 
             plot.ShowLegend(Edge.Right);
 
-            plot.Axes.Margins(horizontal: .1, vertical: .1);
+            plot.Axes.Margins(horizontal: .1, vertical: .15);
  
             plot.ScaleFactor = 2;
 
@@ -297,7 +297,7 @@ namespace ZapReport.Helpers
 
             plot.ShowLegend(Edge.Right);
 
-            plot.Axes.Margins(horizontal: .05, vertical: 0.1);
+            plot.Axes.Margins(horizontal: .05, vertical: 0.15);
 
             plot.ScaleFactor = 2;
 
