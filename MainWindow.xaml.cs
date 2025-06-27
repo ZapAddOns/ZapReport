@@ -38,6 +38,7 @@ namespace ZapReport
             InitializeComponent();
 
             Loaded += Init;
+            Closed += CloseClient;
         }
 
         private void Init(object sender, RoutedEventArgs e)
@@ -138,6 +139,11 @@ namespace ZapReport
             SizeToContent = SizeToContent.WidthAndHeight;
 
             cbPatient.Focus();
+        }
+
+        private void CloseClient(object sender, EventArgs e)
+        {
+            _client.CloseConnection();
         }
 
         private void UpdatePatients()
@@ -256,7 +262,7 @@ namespace ZapReport
             }
 
             _planList = _client.GetPlansForPatient(patient);
-
+            
             foreach (var plan in _planList)
             {
                 if (string.IsNullOrEmpty(plan.PlanName))
