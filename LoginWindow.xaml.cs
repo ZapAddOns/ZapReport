@@ -23,6 +23,9 @@ namespace ZapReport
         {
             DialogResult = false;
 
+            textUsername.Text = string.Empty;
+            textPassword.Password = string.Empty;
+
             Close();
         }
 

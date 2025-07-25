@@ -310,11 +310,6 @@ namespace ZapReport
                 dialog.textPassword.Focus();
             }
 
-            if (!(bool)dialog.ShowDialog())
-            {
-                return (oldUsername, oldPassword);
-            }
-
             return (dialog.textUsername.Text, dialog.textPassword.Password);
         }
 
