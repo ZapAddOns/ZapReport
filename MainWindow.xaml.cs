@@ -79,7 +79,7 @@ namespace ZapReport
 
             if (!isOpen)
             {
-                while (MessageBox.Show(String.Format(Translate.GetString("FileNotFoundErrorText"), "ZapClient.cfg"), Translate.GetString("FileNotFoundErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
+                while (MessageBox.Show(String.Format(Translate.GetString("ClientOpenErrorText"), _client.Config.Server, _client.Config.Port, _client.Config.Username), Translate.GetString("ClientOpenErrorCaption"), MessageBoxButton.OK, MessageBoxImage.Error) != MessageBoxResult.OK)
                     ;
 
                 Application.Current.Shutdown();
