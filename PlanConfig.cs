@@ -29,7 +29,7 @@ namespace ZapReport
 
                 if (!File.Exists(filename))
                 {
-                    filename = "ZapReport." + Network.GetIPAdress() + ".cfg";
+                    filename = "ZapReport." + Network.GetIPAddress() + ".cfg";
                 }
 
                 if (!File.Exists(filename))
