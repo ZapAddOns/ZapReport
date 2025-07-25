@@ -2,7 +2,6 @@
 using QuestPDF.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ZapReport.Components;
 using ZapReport.Extensions;
 using ZapReport.Helpers;
@@ -10,25 +9,37 @@ using ZapTranslation;
 
 namespace ZapReport
 {
+    /// <summary>
+    /// This class generates a PDF report for a treatment plan using QuestPDF.
+    /// It dynamically composes the report content based on provided flags and components.
+    /// The report includes a header, footer, and optional physician/physicist signatures.
+    /// </summary>
     public class PlanReport : IDocument
     {
-        private PlanConfig _config;
-        private PrintData _printData;
-        private List<string> _listOfFlags;
-        private Dictionary<string, Type> _listOfPrintComponents;
-        private string _caption;
-        private bool _printPhysicianSign;
-        private bool _printPhysicistSign;
+        private readonly PlanConfig _config;
+        private readonly PrintData _printData;
+        private readonly List<string> _listOfFlags;
+        private readonly Dictionary<string, Type> _listOfPrintComponents;
+        private readonly string _caption;
+        private readonly bool _printPhysicianSign;
+        private readonly bool _printPhysicistSign;
 
-        public PlanReport(PlanConfig config, PrintData printData, Dictionary<string, Type> listOfPrintComponents, List<string> listOfFlags, string caption, bool? printPhysicianSign, bool? printPhysicistSign)
+        public PlanReport(
+            PlanConfig config,
+            PrintData printData,
+            Dictionary<string, Type> listOfPrintComponents,
+            List<string> listOfFlags,
+            string caption,
+            bool? printPhysicianSign,
+            bool? printPhysicistSign)
         {
-            _config = config;
-            _printData = printData;
-            _listOfFlags = listOfFlags;
-            _listOfPrintComponents = listOfPrintComponents;
-            _caption = caption;
-            _printPhysicianSign = (bool)printPhysicianSign;
-            _printPhysicistSign = (bool)printPhysicistSign;
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _printData = printData ?? throw new ArgumentNullException(nameof(printData));
+            _listOfFlags = listOfFlags ?? throw new ArgumentNullException(nameof(listOfFlags));
+            _listOfPrintComponents = listOfPrintComponents ?? throw new ArgumentNullException(nameof(listOfPrintComponents));
+            _caption = caption ?? string.Empty;
+            _printPhysicianSign = printPhysicianSign ?? false;
+            _printPhysicistSign = printPhysicistSign ?? false;
         }
 
         public void Compose(IDocumentContainer container)
@@ -52,8 +63,6 @@ namespace ZapReport
         {
             container.PaddingVertical(0).Column(column =>
             {
-                var firstEntry = _listOfFlags.First();
-
                 foreach (var entry in _listOfFlags)
                 {
                     if (entry.Equals("Signs") || entry.Equals(Translate.GetString("Signs")))
@@ -64,10 +73,12 @@ namespace ZapReport
                     {
                         column.Item().PageBreak();
                     }
-                    else if (_listOfPrintComponents.ContainsKey(entry)) 
+                    else if (_listOfPrintComponents.TryGetValue(entry, out var componentType))
                     {
                         column.Item().Height(15);
-                        column.Item().Component((PrintComponent)Activator.CreateInstance(_listOfPrintComponents[entry], new object[] { _config, _printData }));
+                        var component = Activator.CreateInstance(componentType, _config, _printData) as PrintComponent;
+                        if (component != null)
+                            column.Item().Component(component);
                     }
                 }
             });
@@ -77,9 +88,12 @@ namespace ZapReport
         {
             var result = DocumentMetadata.Default;
 
-            result.Author = _printData.Physicist?.Name ?? "";
+            result.Author = _printData.Physicist?.Name ?? string.Empty;
             result.Subject = Translate.GetString("PDFSubjectPlan");
-            result.Title = String.Format(Translate.GetString("PDFTitle"), _printData.Patient.MedicalId.Trim(), _printData.Patient.PatientName());
+            result.Title = string.Format(
+                Translate.GetString("PDFTitle"),
+                _printData.Patient.MedicalId?.Trim() ?? string.Empty,
+                _printData.Patient.PatientName());
             result.Creator = Translate.GetString("PDFCreator");
             result.Producer = Translate.GetString("PDFProducer");
 
