@@ -4,6 +4,11 @@ namespace ZapReport.Extensions
 {
     public static class DoubleExtensions
     {
+        public static double ToDegrees(this double value)
+        {
+            return 360.0 / Math.PI * value / 2;
+        }
+
         public static string ToMinSec(this double value)
         {
             var min = Math.Floor(value / 60.0);
