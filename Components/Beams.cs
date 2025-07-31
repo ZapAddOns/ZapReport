@@ -2,6 +2,7 @@
 using QuestPDF.Infrastructure;
 using System;
 using System.Linq;
+using ZapReport.Extensions;
 using ZapReport.Helpers;
 using ZapTranslation;
 
@@ -44,8 +45,8 @@ namespace ZapReport.Components
                 {
                     columns.ConstantColumn(40);
                     columns.ConstantColumn(80);
-                    columns.ConstantColumn(70);
-                    columns.ConstantColumn(70);
+                    columns.ConstantColumn(110);
+                    columns.ConstantColumn(110);
                     columns.RelativeColumn();
                     columns.RelativeColumn();
                 });
@@ -74,8 +75,16 @@ namespace ZapReport.Components
                         {
                             table.Cell().Element(Style.TableContentCenter).Text($"{isocenter.IsocenterID.ToString("0")}");
                             table.Cell().Element(Style.TableContentCenter).Text($"{beam.DeliveryIndex.ToString("0")}");
-                            table.Cell().Element(Style.TableContentCenter).Text($"{(360.0 / Math.PI * beam.AxialAngle / 2).ToString("0")}");
-                            table.Cell().Element(Style.TableContentCenter).Text($"{(360.0 / Math.PI * beam.ObliqueAngle / 2).ToString("0")}");
+                            if (beam.RotationCorrectionStatus == ZapClient.Data.RotationCorrectionStatus.Uncorrected)
+                            {
+                                table.Cell().Element(Style.TableContentCenter).Text($"{beam.AxialAngle.ToDegrees().ToString("0")}");
+                                table.Cell().Element(Style.TableContentCenter).Text($"{beam.ObliqueAngle.ToDegrees().ToString("0")}");
+                            }
+                            else
+                            {
+                                table.Cell().Element(Style.TableContentCenter).Text($"{beam.AxialAngle.ToDegrees().ToString("0")} ({beam.CorrectedAxial.ToString("0.0")})");
+                                table.Cell().Element(Style.TableContentCenter).Text($"{beam.ObliqueAngle.ToDegrees().ToString("0")} ({beam.CorrectedOblique.ToString("0.0")})");
+                            }
                             table.Cell().Element(Style.TableContentRight).Text($"{beam.MU.ToString("#,#0.0")}");
                             table.Cell().Element(Style.TableContentRight).Text($"{(beam.MU / _printData.PlanSummary.TotalFractions).ToString("#,#0.0")}");
 

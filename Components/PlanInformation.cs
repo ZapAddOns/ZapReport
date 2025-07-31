@@ -55,7 +55,7 @@ namespace ZapReport.Components
                 table.Cell().Text(Translate.GetString("Planname")).Style(Style.Bold);
                 table.Cell().Text(_printData.Plan.PlanName.Trim());
                 table.Cell().Text(Translate.GetString("Status")).Style(Style.Bold);
-                table.Cell().Text(_printData.Plan.Status.AsString() + (_printData.Plan.IsSimulation ? ", " + Translate.GetString("Simulation") : ""));
+                table.Cell().Text(_printData.Plan.Status.AsString() + (_printData.Plan.IsGyroscopicCorrectionOn ? ", " + Translate.GetString("WithGyroscopicCorrection") : "") + (_printData.Plan.IsSimulation ? ", " + Translate.GetString("Simulation") : ""));
                 if (_printData.Plan.Status == ZapSurgical.Data.PlanStatus.Deliverable || _printData.Plan.Status == ZapSurgical.Data.PlanStatus.PartiallyDelivered || _printData.Plan.Status == ZapSurgical.Data.PlanStatus.FullyDelivered)
                 {
                     var approver = _printData.PlanData.Approver?.Trim();
